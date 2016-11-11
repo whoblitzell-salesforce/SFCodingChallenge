@@ -1,0 +1,69 @@
+﻿<meta http-equiv="Refresh" content="60">
+<div class="jumbotron">
+    <h1>Coding Challenge (Salesforce Twitter Feed Reader)</h1>
+    <p class="lead">This is an application built in ASP.NET WebAPI2 that demonstrates how to process a user timeline from Twitter's API. Every 60 seconds the page will refresh. You can filter results by typing in a short alphabetical term, of more than 4 letters.</p>
+    <p><a href="https://dev.twitter.com/web/overview" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+
+<label>Filter</label><input id="TweetFilter" type="text" maxlength="12" />
+
+<h2>Salesforce Latest Twitter Feed</h2>
+<div id ="tweetResults">
+</div>
+
+
+<script type="text/javascript">
+
+    $("#TweetFilter").keyup(function () {
+        filterResults();
+    });
+
+    function filterResults() {
+        var filterText = $("#TweetFilter").val();
+
+        if (!filterText) {
+            return getTweetsFromServer();
+        }
+
+        else if (filterText.length >= 4) {
+            return getTweetsFromServer(filterText);
+        }
+    }
+
+    function getTweetsFromServer(filterText) {
+
+        if (!filterText)
+            filterText = '';
+
+        var uri = '/api/tweets/10/salesforce';
+
+        if (filterText) {
+            uri += ('/' + filterText);
+        }
+        $.ajax({
+            url: uri,
+            cache: false,
+            success: function (data) {
+                //$("#tweetResults").append(html);
+
+                // clear the results, replace them... no paging or caching yet
+                $("#tweetResults").empty();
+                for (var i = 0; i < data.length; i += 1) {
+                    var tweetUrl = data[i].TweetUrl;
+                    var getEmbeddedTweet = 'https://publish.twitter.com/oembed?url=' + tweetUrl + '&callback=?';
+
+                    // ajax get HTML
+                    // we get around the CORS error with callback = ? which enables JSONP and CORS true by default
+                    $.getJSON(getEmbeddedTweet, function (tweetHtmlContent) {
+                        if (tweetHtmlContent && tweetHtmlContent.html)
+                            $("#tweetResults").append(tweetHtmlContent.html);
+                    });
+                }
+            }
+        });
+    }
+
+    $(document).ready(function ($) {
+        getTweetsFromServer();
+    });
+</script>

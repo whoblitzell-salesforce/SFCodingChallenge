@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterFeedReader", "TwitterFeedReader\TwitterFeedReader.csproj", "{4C69C861-8A4E-4712-BCC8-9E11C97CCEAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterFeedReader.Tests", "TwitterFeedReader.Tests\TwitterFeedReader.Tests.csproj", "{BC839D80-2143-4F95-9208-80D1FC5FE2D5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C69C861-8A4E-4712-BCC8-9E11C97CCEAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C69C861-8A4E-4712-BCC8-9E11C97CCEAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C69C861-8A4E-4712-BCC8-9E11C97CCEAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C69C861-8A4E-4712-BCC8-9E11C97CCEAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC839D80-2143-4F95-9208-80D1FC5FE2D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC839D80-2143-4F95-9208-80D1FC5FE2D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC839D80-2143-4F95-9208-80D1FC5FE2D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC839D80-2143-4F95-9208-80D1FC5FE2D5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
