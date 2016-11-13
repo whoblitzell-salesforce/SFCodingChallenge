@@ -21,23 +21,6 @@ namespace TwitterFeedReader.Controllers
             var tweets = await Api.TwitterApiService.GetTweets(userName, count, filter, string.Empty);
             return tweets;
         }
-
-        // POST api/values
-        public void Post()
-        {
-            throw new NotSupportedException();
-        }
-
-        // PUT api/values/5
-        public void Put()
-        {
-            throw new NotSupportedException();
-        }
-
-        // DELETE api/values/5
-        public void Delete()
-        {
-            throw new NotSupportedException();
-        }
+        
     }
 }

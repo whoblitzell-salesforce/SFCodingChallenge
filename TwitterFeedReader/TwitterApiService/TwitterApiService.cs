@@ -32,17 +32,20 @@ namespace TwitterFeedReader.Api
         {
             using (HttpClient httpClient = new HttpClient())
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, OAuthBaseUrl);
-                var customerInfo = Convert.ToBase64String(new UTF8Encoding()
-                                          .GetBytes(OAuthAPIKey + ":" + OAuthAPISecret));
-                request.Headers.Add("Authorization", "Basic " + customerInfo);
-                request.Content = new StringContent("grant_type=client_credentials", Encoding.UTF8,
-                                                                          "application/x-www-form-urlencoded");
+                using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, OAuthBaseUrl))
+                {
+                    var customerInfo = Convert.ToBase64String(new UTF8Encoding()
+                                         .GetBytes(OAuthAPIKey + ":" + OAuthAPISecret));
+                    request.Headers.Add("Authorization", "Basic " + customerInfo);
+                    request.Content = new StringContent("grant_type=client_credentials", Encoding.UTF8,
+                                                                              "application/x-www-form-urlencoded");
 
-                HttpResponseMessage response = await httpClient.SendAsync(request);
-                string jsonResponseMessage = await response.Content.ReadAsStringAsync();
-                dynamic parsedResponse = new JavaScriptSerializer().Deserialize<object>(jsonResponseMessage);
-                return parsedResponse["access_token"];
+                    HttpResponseMessage response = await httpClient.SendAsync(request);
+                    string jsonResponseMessage = await response.Content.ReadAsStringAsync();
+                    dynamic parsedResponse = new JavaScriptSerializer().Deserialize<object>(jsonResponseMessage);
+                    return parsedResponse["access_token"];
+                }
+
             }
         }
 
@@ -56,34 +59,35 @@ namespace TwitterFeedReader.Api
             using (HttpClient httpClient = new HttpClient())
             {
 
-                var requestUserTimeline = new HttpRequestMessage(HttpMethod.Get,
-                string.Format(UserTimelineBaseUrl,
-                              count, userName, 0, 1));
-
-                requestUserTimeline.Headers.Add("Authorization", "Bearer " + accessToken);
-
-                HttpResponseMessage responseUserTimeLine = await httpClient.SendAsync(requestUserTimeline);
-
-                dynamic jsonResponse = new JavaScriptSerializer().Deserialize<object>(await responseUserTimeLine.Content.ReadAsStringAsync());
-
-                var tweetCollection = (jsonResponse as IEnumerable<dynamic>);
-
-                if (tweetCollection == null)
+                using (HttpRequestMessage requestUserTimeline = new HttpRequestMessage(HttpMethod.Get, string.Format(UserTimelineBaseUrl, count, userName, 0, 1)))
                 {
-                    return null;
+
+                    requestUserTimeline.Headers.Add("Authorization", "Bearer " + accessToken);
+
+                    HttpResponseMessage responseUserTimeLine = await httpClient.SendAsync(requestUserTimeline);
+
+                    dynamic jsonResponse = new JavaScriptSerializer().Deserialize<object>(await responseUserTimeLine.Content.ReadAsStringAsync());
+
+                    var tweetCollection = (jsonResponse as IEnumerable<dynamic>);
+
+                    if (tweetCollection == null)
+                    {
+                        return null;
+                    }
+
+                    // apply filter, if passed
+                    if (!String.IsNullOrWhiteSpace(filter))
+                    {
+                        tweetCollection = tweetCollection.Where(t => t["text"] != null && t["text"].ToString().Contains(filter));
+                    }
+
+                    return tweetCollection.Select(t => new TwitterFeedModel()
+                    {
+                        TweetId = t["id"],
+                        UserName = t["user"]["name"]
+                    });
                 }
 
-                // apply filter, if passed
-                if (!String.IsNullOrWhiteSpace(filter))
-                {
-                    tweetCollection = tweetCollection.Where(t => t["text"] != null && t["text"].ToString().Contains(filter));
-                }
-
-                return tweetCollection.Select(t => new TwitterFeedModel()
-                {
-                    TweetId = t["id"],
-                    UserName = t["user"]["name"]
-                });
             }
 
         }

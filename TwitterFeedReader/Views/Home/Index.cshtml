@@ -8,7 +8,7 @@
 <label>Filter</label><input id="TweetFilter" type="text" maxlength="12" />
 
 <h2>Salesforce Latest Twitter Feed</h2>
-<div id ="tweetResults">
+<div id="tweetResults">
 </div>
 
 
@@ -44,8 +44,6 @@
             url: uri,
             cache: false,
             success: function (data) {
-                //$("#tweetResults").append(html);
-
                 // clear the results, replace them... no paging or caching yet
                 $("#tweetResults").empty();
                 for (var i = 0; i < data.length; i += 1) {
@@ -53,7 +51,6 @@
                     var getEmbeddedTweet = 'https://publish.twitter.com/oembed?url=' + tweetUrl + '&callback=?';
 
                     // ajax get HTML
-                    // we get around the CORS error with callback = ? which enables JSONP and CORS true by default
                     $.getJSON(getEmbeddedTweet, function (tweetHtmlContent) {
                         if (tweetHtmlContent && tweetHtmlContent.html)
                             $("#tweetResults").append(tweetHtmlContent.html);
