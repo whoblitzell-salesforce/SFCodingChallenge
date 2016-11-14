@@ -5,6 +5,18 @@
     <p><a href="https://dev.twitter.com/web/overview" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
 </div>
 
+<div id="twitterLoginDisplay">
+    @if (this.Request.IsAuthenticated)
+    {
+        <span>@@@HttpContext.Current.User.Identity.Name</span>
+    }
+    else
+    {
+        @Html.ActionLink("Sign in with Twitter", "TwitterSignIn", "Home");
+    }
+</div>
+
+
 <label>Filter</label><input id="TweetFilter" type="text" maxlength="12" />
 
 <h2>Salesforce Latest Twitter Feed</h2>
