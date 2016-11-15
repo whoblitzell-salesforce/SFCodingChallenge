@@ -6,9 +6,9 @@
 </div>
 
 <div id="twitterLoginDisplay">
-    @if (this.Request.IsAuthenticated)
+    @if (ViewBag.LoggedInUser != null)
     {
-        <span>@@@HttpContext.Current.User.Identity.Name</span>
+        <span>Welcome, @ViewBag.LoggedInUser</span>
     }
     else
     {

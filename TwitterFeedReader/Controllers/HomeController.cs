@@ -22,9 +22,13 @@ namespace TwitterFeedReader.Controllers
         #endregion
 
         [Compress]
-        public ActionResult Index()
+        public ActionResult Index(string userName = null)
         {
             ViewBag.Title = "Twitter Feed Reader Coding Challenge";
+
+            if (!String.IsNullOrWhiteSpace(userName))
+                ViewBag.LoggedInUser = userName;
+
             return View();
         }
         
@@ -53,11 +57,14 @@ namespace TwitterFeedReader.Controllers
             // User authenticates using the Access Token
             twitterService.AuthenticateWith(accessToken.Token, accessToken.TokenSecret);
             TwitterUser user = twitterService.VerifyCredentials(new VerifyCredentialsOptions() { });
-            bool successfulLogin = user != null && user.IsVerified == true;
+            bool successfulLogin = user != null;
 
             FormsAuthentication.SetAuthCookie(user.ScreenName, false);
 
-            return RedirectToAction("Index", "Home", new { success = successfulLogin });
+            if (successfulLogin)
+                return RedirectToAction("Index", "Home", new { userName = user.ScreenName });
+            
+            return RedirectToAction("Index", "Home");
         }
     }
 }
